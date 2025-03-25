@@ -37,14 +37,15 @@ mkdir -p storage/framework/sessions && mkdir -p storage/framework/views && mkdir
 
 ### 6. Build and Start Docker
 ```bash
-cd .. #navigate back one folder
+cd ..
 docker-compose up -d --build
 ```
 
 ### 7. Run Migrations and Seed Database
 ```bash
 cd customer-api 
-php artisan migrate --seed
+php artisan migrate
+php artisan db:seed
 ```
 
 ---
