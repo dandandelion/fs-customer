@@ -2,52 +2,70 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Customer;
 use Illuminate\Http\Request;
+use App\Models\Customer;
+use App\Services\ElasticsearchService;
 
 class CustomerController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    protected $searchService;
+
+    public function __construct(ElasticsearchService $searchService)
     {
-        return response()->json(Customer::all());
+        $this->searchService = $searchService;
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        $customer = Customer::create($request->all());
-        return response()->json($customer, 201);
+        $validated = $request->validate([
+            'email_address' => 'required|email|unique:customer,email_address',
+            'first_name'    => 'required|string|max:255',
+            'last_name'     => 'required|string|max:255',
+            'contact_no'    => 'required|string|max:15',
+        ]);
+
+        $customer = Customer::create($validated);
+
+        $this->searchService->syncCustomer($customer);
+
+        return response()->json(['message' => 'Customer created successfully', 'data' => $customer], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function update(Request $request, Customer $customer)
     {
-        return response()->json(Customer::findOrFail($id));
+        $validated = $request->validate([
+            'email_address' => "required|email|unique:customer,email_address,{$customer->id}",
+            'first_name'    => 'required|string|max:255',
+            'last_name'     => 'required|string|max:255',
+            'contact_no'    => 'required|string|max:15',
+        ]);
+
+        $customer->update($validated);
+
+        $this->searchService->syncCustomer($customer);
+
+        return response()->json(['message' => 'Customer updated successfully', 'data' => $customer]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(Customer $customer)
     {
-        $customer = Customer::findOrFail($id);
-        $customer->update($request->all());
-        return response()->json($customer);
+        $customer->delete();
+
+        $this->searchService->deleteCustomer($customer->id);
+
+        return response()->json(['message' => 'Customer deleted successfully']);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function search(Request $request)
     {
-        Customer::destroy($id);
-        return response()->json(null, 204);
+        $query = $request->input('query');
+
+        if (!$query) {
+            return response()->json(['message' => 'Search query is required'], 400);
+        }
+
+        $results = $this->searchService->searchCustomers($query);
+
+        return response()->json($results);
     }
 }
