@@ -14,9 +14,38 @@ class ElasticsearchService
         $this->baseUrl = env('ELASTICSEARCH_HOST', 'http://searcher:9200');
     }
 
-    /**
-     * Sync customer data to Elasticsearch
-     */
+    public function checkIndexExists(): bool
+    {
+        $url = "{$this->baseUrl}/customers";
+        $response = Http::head($url);
+
+        return $response->successful();
+    }
+
+    public function createIndex()
+    {
+        $url = "{$this->baseUrl}/customers";
+
+        $body = [
+            'settings' => [
+                'number_of_shards' => 1,
+                'number_of_replicas' => 1
+            ],
+            'mappings' => [
+                'properties' => [
+                    'email_address' => ['type' => 'keyword'],
+                    'first_name'    => ['type' => 'text'],
+                    'last_name'     => ['type' => 'text'],
+                    'contact_no'    => ['type' => 'keyword'],
+                    'created_at'    => ['type' => 'date'],
+                    'updated_at'    => ['type' => 'date'],
+                ]
+            ]
+        ];
+
+        return Http::put($url, $body);
+    }
+
     public function syncCustomer(Customer $customer)
     {
         $url = "{$this->baseUrl}/customers/_doc/{$customer->id}";
@@ -31,18 +60,12 @@ class ElasticsearchService
         ]);
     }
 
-    /**
-     * Delete customer from Elasticsearch
-     */
     public function deleteCustomer(int $customerId)
     {
         $url = "{$this->baseUrl}/customers/_doc/{$customerId}";
         return Http::delete($url);
     }
 
-    /**
-     * Search for customers by name or email
-     */
     public function searchCustomers(string $query)
     {
         $url = "{$this->baseUrl}/customers/_search";
