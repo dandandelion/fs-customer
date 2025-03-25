@@ -40,31 +40,11 @@ php artisan key:generate
 php artisan migrate --seed
 ```
 
-### 7. Start the Laravel Server
+### 7. Build and Start Docker
 ```bash
-php artisan serve
+cd .. #navigate back one folder
+docker-compose up -d --build
 ```
-The backend should now be running at **http://127.0.0.1:8000**.
-
----
-
-## 🖥 Frontend Setup (React)
-
-### 8. Navigate to the Frontend Directory
-```bash
-cd ../customer-ui
-```
-
-### 9. Install Dependencies
-```bash
-npm install
-```
-
-### 10. Start the React Development Server
-```bash
-npm run dev
-```
-The frontend should now be running at **http://localhost:5173** (default Vite port).
 
 ---
 
@@ -77,7 +57,3 @@ The frontend should now be running at **http://localhost:5173** (default Vite po
 | `DELETE` | `/api/customers/{id}` | Delete a customer |
 
 ---
-
-## 📜 License
-This project is open-source and available under the MIT License.
-
