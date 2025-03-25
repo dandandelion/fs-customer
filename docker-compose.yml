@@ -8,10 +8,8 @@ services:
     working_dir: /var/www
     volumes:
       - ./customer-api:/var/www
-      - ./customer-api:/var/www/storage/framework
-      - ./customer-api:/var/www/storage/framework/sessions
-      - ./customer-api:/var/www/storage/framework/views
-      - ./customer-api:/var/www/storage/framework/cache
+      - ./customer-api/storage:/var/www/storage
+      - /var/www/vendor
     depends_on:
       - database
       - searcher
