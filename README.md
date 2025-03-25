@@ -30,20 +30,20 @@ Copy `.env.example` to `.env` and update the database credentials:
 cp .env.example .env
 ```
 
-### 5. Generate Application Key
+### 5. Create Cache Folders
 ```bash
-php artisan key:generate
+mkdir -p storage/framework/sessions && mkdir -p storage/framework/views && mkdir -p storage/framework/cache
 ```
 
-### 6. Run Migrations and Seed Database (Optional)
-```bash
-php artisan migrate --seed
-```
-
-### 7. Build and Start Docker
+### 6. Build and Start Docker
 ```bash
 cd .. #navigate back one folder
 docker-compose up -d --build
+```
+
+### 7. Run Migrations and Seed Database
+```bash
+php artisan migrate --seed
 ```
 
 ---
