@@ -70,14 +70,16 @@ class ElasticsearchService
     {
         $url = "{$this->baseUrl}/customers/_search";
 
-        $response = Http::post($url, [
-            'query' => [
-                'multi_match' => [
-                    'query'  => $query,
-                    'fields' => ['first_name', 'last_name', 'email_address'],
+        $queryBody = ($query === "*") ? 
+            ["query" => ["match_all" => (object)[]]] :
+            ["query" => [
+                "multi_match" => [
+                    "query"  => $query,
+                    "fields" => ["first_name", "last_name", "email_address"],
                 ]
-            ]
-        ]);
+            ]];
+
+        $response = Http::post($url, $queryBody);
 
         return $response->json();
     }
