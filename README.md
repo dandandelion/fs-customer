@@ -2,7 +2,7 @@
 
 A full-stack customer management system with a backend powered by Laravel and a frontend built with React.
 
-## 🚀 Getting Started
+## Getting Started
 
 ### 1. Clone the Repository
 ```bash
@@ -12,30 +12,28 @@ cd fs-customer
 
 ---
 
-## 🛠 Backend Setup (Laravel)
+## Project Setup
 
-### 2. Navigate to the Backend Directory
+### 2. Navigate to the Backend Directory & Install Dependencies
 ```bash
 cd customer-api
 ```
-
-### 3. Install Dependencies
 ```bash
 composer install
 ```
 
-### 4. Set Up Environment Variables
+### 3. Set Up Environment Variables
 Copy `.env.example` to `.env` and update the database credentials:
 ```bash
 cp .env.example .env
 ```
 
-### 5. Create Cache Folders
+### 4. Create Cache Folders
 ```bash
 mkdir -p storage/framework/sessions && mkdir -p storage/framework/views && mkdir -p storage/framework/cache
 ```
 
-### 6. Navigate & Build then Start Docker
+### 5. Navigate & Build then Start Docker
 ```bash'
 cd ..
 ```
@@ -43,7 +41,7 @@ cd ..
 docker-compose up -d --build
 ```
 
-### 7. Run Migrations and Seed Database
+### 6. Run Migrations and Seed Database
 ```bash
 docker exec -it php artisan migrate
 docker exec -it php artisan db:seed
