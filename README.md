@@ -9,6 +9,8 @@ Note: This project requires docker.
 ### 1. Clone the Repository
 ```bash
 git clone https://github.com/dandandelion/fs-customer.git
+```
+```bash
 cd fs-customer
 ```
 
