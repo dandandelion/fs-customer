@@ -76,7 +76,7 @@ class ElasticsearchService
                 "multi_match" => [
                     "query"  => $query,
                     "fields" => ["first_name", "last_name", "email_address"],
-                    "fuzziness" => "AUTO", // 👈 Enables fuzzy search
+                    "fuzziness" => "AUTO",
                     "operator"  => "and"
                 ]
             ]];
