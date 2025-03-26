@@ -35,9 +35,11 @@ cp .env.example .env
 mkdir -p storage/framework/sessions && mkdir -p storage/framework/views && mkdir -p storage/framework/cache
 ```
 
-### 6. Build and Start Docker
-```bash
+### 6. Navigate & Build and Start Docker
+```bash'
 cd ..
+```
+```bash
 docker-compose up -d --build
 ```
 
