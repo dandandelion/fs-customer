@@ -43,9 +43,8 @@ docker-compose up -d --build
 
 ### 7. Run Migrations and Seed Database
 ```bash
-cd customer-api 
-php artisan migrate
-php artisan db:seed
+docker exec -it php artisan migrate
+docker exec -it php artisan db:seed
 ```
 
 ---
