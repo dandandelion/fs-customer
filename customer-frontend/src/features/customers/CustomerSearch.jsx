@@ -21,9 +21,7 @@ const CustomerSearch = ({ onSearchLocal, onViewCustomer }) => {
     }, [searchTerm]);
 
     const fetchApiResults = async (query) => {
-        console.log(query);
         fetchCustomers(query).then((customers) => {
-            console.log(customers);
             setApiResults(customers.hits.hits);
         });
     };
@@ -63,7 +61,7 @@ const CustomerSearch = ({ onSearchLocal, onViewCustomer }) => {
 
             {/* Floating Suggestions Dropdown */}
             {showSuggestions && apiResults.length > 0 && (
-                <ul className="list-group position-absolute w-100 shadow bg-white z-index-100" style={{ zIndex: 9999 }}>
+                <ul className="list-group position-absolute w-100 shadow bg-white z-index-100" style={{ zIndex: 9998 }}>
                     {apiResults.map((customer) => (
                         <li
                             key={customer._id}
@@ -77,6 +75,7 @@ const CustomerSearch = ({ onSearchLocal, onViewCustomer }) => {
                             </div>
                         </li>
                     ))}
+                    <small className="text-muted" style={{ position: 'absolute', bottom: 0, right: 5, fontSize: "0.6em", zIndex: 9999 }}><em>From Elasticsearch</em></small>
                 </ul>
             )}
         </div>

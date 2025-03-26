@@ -99,7 +99,7 @@ const CustomerList = () => {
 
                     <div className="d-flex flex-column gap-2">
                         <AnimatePresence>
-                            {filteredCustomers.slice(0, maxEntries).map((customer, i) => (
+                            {filteredCustomers.slice(0, maxEntries).sort((a, b) => a._source.first_name.localeCompare(b._source.first_name)).map((customer, i) => (
                                 <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10, filter: "blur(5px)" }} transition={{ delay: (i * 0.05) }} key={customer._id} className="">
                                     <div className="card py-2 px-3 gap-2 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
                                         <div className="d-flex flex-column align-items-start w-100">
