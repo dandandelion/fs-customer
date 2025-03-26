@@ -11,13 +11,13 @@ import { PiEyeFill } from "react-icons/pi";
 
 const CustomerList = () => {
     const [showModal, setShowModal] = useState(false);
-    const [viewCustomer, setViewCustomer] = useState(false);
     const [customers, setCustomers] = useState([]);
     const [filteredCustomers, setFilteredCustomers] = useState([]);
-    const [maxEntries, setMaxEntries] = useState(10);
+    const [maxEntries, _setMaxEntries] = useState(10);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [customerToDelete, setCustomerToDelete] = useState(null);
     const [selectedCustomer, setSelectedCustomer] = useState(null);
+    const [currentSearchTerm, setCurrentSearchTerm] = useState("");
 
     useEffect(() => {
         initializeCustomers();
@@ -42,6 +42,7 @@ const CustomerList = () => {
 
     const onSearchLocal = (event) => {
         const { value } = event.target;
+        setCurrentSearchTerm(value);
         setFilteredCustomers(customers.filter((customer) =>
             customer._source.first_name.toLowerCase().includes(value.toLowerCase())
             || customer._source.last_name.toLowerCase().includes(value.toLowerCase())
@@ -50,6 +51,10 @@ const CustomerList = () => {
         ));
     };
 
+    useEffect(() => {
+        console.log(filteredCustomers);
+    }, [filteredCustomers]);
+
     const onConfirmDelete = async () => {
         if (customerToDelete) {
             toast.promise(
@@ -57,13 +62,16 @@ const CustomerList = () => {
                 {
                     loading: "Deleting customer",
                     success: () => {
-                        setCustomers(customers.filter((c) => c._id !== customerToDelete._id));
-                        setFilteredCustomers(filteredCustomers.filter((c) => c._id !== customerToDelete._id));
+                        setCustomers(customers.filter((c) => c._id != customerToDelete._id));
+                        setFilteredCustomers(filteredCustomers.filter((c) => c._id != customerToDelete._id));
                         setCustomerToDelete(null);
-                        onCloseView();
+                        onCloseView("deleted");
                         return "Customer deleted successully!";
                     },
-                    error: "Failed to delete customer",
+                    error: (err) => {
+                        console.error(err);
+                        return "Failed to delete customer";
+                    },
                 }
             );
         }
@@ -80,7 +88,7 @@ const CustomerList = () => {
     };
 
     const onCloseView = (updatedProfile = null) => {
-        if (updatedProfile) {
+        if (updatedProfile && updatedProfile !== "deleted") {
             const toUpdate = customers.find((c) => c._id == updatedProfile._id);
             if (toUpdate) {
                 toUpdate._source = updatedProfile._source;
@@ -89,7 +97,6 @@ const CustomerList = () => {
             }
         }
         setSelectedCustomer(null);
-        setFilteredCustomers(customers);
     };
 
     return (
@@ -103,31 +110,35 @@ const CustomerList = () => {
                         </Button>
                     </div>
 
-                    <CustomerSearch onSearchLocal={(term) => onSearchLocal(term)} onViewCustomer={(customer) => onViewCustomer(customer)} />
+                    <CustomerSearch persistSearchTerm={currentSearchTerm} onSearchLocal={(term) => onSearchLocal(term)} onViewCustomer={(customer) => onViewCustomer(customer)} />
 
                     <div className="d-flex flex-column gap-2">
                         <AnimatePresence>
-                            {filteredCustomers.slice(0, maxEntries).sort((a, b) => a._source.first_name.localeCompare(b._source.first_name)).map((customer, i) => (
-                                <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10, filter: "blur(5px)" }} transition={{ delay: (i * 0.05) }} key={customer._id} className="">
-                                    <div className="card py-2 px-3 gap-2 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
-                                        <div className="d-flex flex-column align-items-start w-100">
-                                            <h5 className="p-0 m-0">{customer._source.first_name} {customer._source.last_name}</h5>
-                                            <small className="p-0 m-0 text-muted"><a className="text-purple" href={`mailto::${customer._source.email_address}`}>{customer._source.email_address}</a></small>
-                                            <small className="p-0 m-0"><em>{customer._source.contact_no}</em></small>
-                                        </div>
-                                        <div className="d-flex flex-wrap w-100 w-md-auto justify-content-end ">
-                                            <Button
-                                                variant="outline-success"
-                                                className="flex-grow-1 flex-md-grow-0 d-flex align-items-end justify-content-center gap-2"
-                                                onClick={() => onViewCustomer(customer)}
-                                            >
-                                                <PiEyeFill style={{ fontSize: '1.1em' }} />
-                                            </Button>
-                                        </div>
+                            {
+                                filteredCustomers.length > 0 ? filteredCustomers.slice(0, maxEntries).sort((a, b) => a._source.first_name.localeCompare(b._source.first_name)).map((customer, i) => (
+                                    <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10, filter: "blur(5px)" }} transition={{ delay: (i * 0.05) }} key={customer._id} className="">
+                                        <div className="card py-2 px-3 gap-2 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+                                            <div className="d-flex flex-column align-items-start w-100">
+                                                <h5 className="p-0 m-0">{customer._source.first_name} {customer._source.last_name}</h5>
+                                                <small className="p-0 m-0 text-muted"><a className="text-purple" href={`mailto::${customer._source.email_address}`}>{customer._source.email_address}</a></small>
+                                                <small className="p-0 m-0"><em>{customer._source.contact_no}</em></small>
+                                            </div>
+                                            <div className="d-flex flex-wrap w-100 w-md-auto justify-content-end ">
+                                                <Button
+                                                    variant="outline-success"
+                                                    className="flex-grow-1 flex-md-grow-0 d-flex align-items-end justify-content-center gap-2"
+                                                    onClick={() => onViewCustomer(customer)}
+                                                >
+                                                    <PiEyeFill style={{ fontSize: '1.1em' }} />
+                                                </Button>
+                                            </div>
 
-                                    </div>
-                                </motion.div>
-                            ))}
+                                        </div>
+                                    </motion.div>
+                                ))
+                                    :
+                                    <div className="text-center py-5">No customers found.</div>
+                            }
                         </AnimatePresence>
                     </div>
                 </>

@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { CiSearch } from "react-icons/ci";
 import { fetchCustomers } from "./CustomerAPI";
 
-const CustomerSearch = ({ onSearchLocal, onViewCustomer }) => {
-    const [searchTerm, setSearchTerm] = useState("");
+const CustomerSearch = ({ onSearchLocal, onViewCustomer, persistSearchTerm = "" }) => {
+    const [searchTerm, setSearchTerm] = useState(persistSearchTerm);
     const [apiResults, setApiResults] = useState([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
 
