@@ -31,7 +31,10 @@ const CustomerForm = ({ closeModal, existingData = null }) => {
                         closeModal(res.data);
                         return "Customer added successfully"
                     },
-                    error: "Failed to add customer",
+                    error: (err) => {
+                        console.error(err);
+                        return "Failed to add customer. Please check the details and try again."
+                    },
                 },
                 {
                     id: 'customer-add',

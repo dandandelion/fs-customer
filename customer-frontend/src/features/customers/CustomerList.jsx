@@ -51,10 +51,6 @@ const CustomerList = () => {
         ));
     };
 
-    useEffect(() => {
-        console.log(filteredCustomers);
-    }, [filteredCustomers]);
-
     const onConfirmDelete = async () => {
         if (customerToDelete) {
             toast.promise(
