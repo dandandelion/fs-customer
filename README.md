@@ -54,7 +54,7 @@ docker exec -it php artisan db:seed
 ## 🔗 API Endpoints
 | Method | Endpoint | Description |
 |--------|---------|------------|
-| `GET` | `/api/customers` | Fetch all customers |
+| `GET` | `/api/customers/search?query` | Search for customers |
 | `POST` | `/api/customers` | Add a new customer |
 | `PUT` | `/api/customers/{id}` | Update a customer |
 | `DELETE` | `/api/customers/{id}` | Delete a customer |
