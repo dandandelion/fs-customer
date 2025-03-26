@@ -2,6 +2,8 @@
 
 A full-stack customer management system with a backend powered by Laravel and a frontend built with React.
 
+Note: This project requires docker.
+
 ## Getting Started
 
 ### 1. Clone the Repository
