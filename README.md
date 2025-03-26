@@ -10,6 +10,7 @@ Note: This project requires docker.
 ```bash
 git clone https://github.com/dandandelion/fs-customer.git
 ```
+Navigate to the repository
 ```bash
 cd fs-customer
 ```
@@ -49,9 +50,13 @@ docker-compose up -d --build
 ```bash
 docker exec -it customer_api php artisan migrate
 ```
+Optionally seed database
 ```bash
 docker exec -it customer_api php artisan db:seed
 ```
+
+### 7. That's all!
+Just make sure docker is running and navigate to the front-end with `http://localhost:5173`.
 
 ---
 
