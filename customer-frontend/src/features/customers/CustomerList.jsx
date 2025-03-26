@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { Button, Modal } from "react-bootstrap";
+import CustomerSearch from "./CustomerSearch";
 import CustomerForm from "./CustomerForm";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-hot-toast"
 import { fetchCustomers, deleteCustomer } from "./CustomerAPI";
-import { CiSearch } from "react-icons/ci";
-import { PiEyeFill } from "react-icons/pi";
 import CustomerView from "./CustomerView";
+import { PiEyeFill } from "react-icons/pi";
+
 
 const CustomerList = () => {
     const [showModal, setShowModal] = useState(false);
@@ -80,6 +81,7 @@ const CustomerList = () => {
 
     const onCloseView = () => {
         setSelectedCustomer(null);
+        setFilteredCustomers(customers);
     };
 
     return (
@@ -92,12 +94,9 @@ const CustomerList = () => {
                             + Add Customer
                         </Button>
                     </div>
-                    <div className="input-group mb-3">
-                        <div className="input-group-prepend">
-                            <span className="input-group-text h-100" id="basic-addon1"><CiSearch /></span>
-                        </div>
-                        <input onChange={onSearchLocal} type="search" name="search-customers" id="search-customers" placeholder="Start typing..." className="form-control" aria-describedby="basic-addon1" />
-                    </div>
+
+                    <CustomerSearch onSearchLocal={(term) => onSearchLocal(term)} onViewCustomer={(customer) => onViewCustomer(customer)} />
+
                     <div className="d-flex flex-column gap-2">
                         <AnimatePresence>
                             {filteredCustomers.slice(0, maxEntries).map((customer, i) => (
