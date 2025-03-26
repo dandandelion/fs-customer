@@ -32,10 +32,10 @@ const CustomerList = () => {
             .catch((error) => console.error("Error fetching customers:", error));
     };
 
-    const onCloseModal = (status) => {
-        if (status) {
-            setCustomers((prev, index) => [...prev, { _id: status.id, _source: status }]);
-            setFilteredCustomers((prev, index) => [...prev, { _id: status.id, _source: status }]);
+    const onCloseModal = (profile) => {
+        if (profile) {
+            setCustomers((prev, index) => [...prev, { _id: profile.id, _source: profile }]);
+            setFilteredCustomers((prev, index) => [...prev, { _id: profile.id, _source: profile }]);
         }
         setShowModal(false);
     };
@@ -79,7 +79,15 @@ const CustomerList = () => {
         setSelectedCustomer(customer);
     };
 
-    const onCloseView = () => {
+    const onCloseView = (updatedProfile = null) => {
+        if (updatedProfile) {
+            const toUpdate = customers.find((c) => c._id == updatedProfile._id);
+            if (toUpdate) {
+                toUpdate._source = updatedProfile._source;
+                setCustomers(customers.map((c) => c._id === updatedProfile._id ? toUpdate : c));
+                setFilteredCustomers(filteredCustomers.map((c) => c._id === updatedProfile._id ? toUpdate : c));
+            }
+        }
         setSelectedCustomer(null);
         setFilteredCustomers(customers);
     };

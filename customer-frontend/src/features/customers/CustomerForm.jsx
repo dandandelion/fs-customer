@@ -1,31 +1,60 @@
 import { useForm } from "react-hook-form";
 import { Button, Form } from "react-bootstrap";
-import { createCustomer } from "./CustomerAPI";
+import { createCustomer, updateCustomer } from "./CustomerAPI";
 import { toast } from "react-hot-toast";
+import { useEffect } from "react";
 
-const CustomerForm = ({ closeModal }) => {
+const CustomerForm = ({ closeModal, existingData = null }) => {
     const {
         register,
-        handleSubmit,
         formState: { errors },
+        handleSubmit,
+        setValue
     } = useForm();
 
+    useEffect(() => {
+        if (existingData) {
+            setValue("first_name", existingData._source.first_name);
+            setValue("last_name", existingData._source.last_name);
+            setValue("email_address", existingData._source.email_address);
+            setValue("contact_no", existingData._source.contact_no);
+        }
+    }, [existingData, setValue]);
+
     const onSubmit = async (data) => {
-        toast.promise(
-            createCustomer(data),
-            {
-                loading: "Adding new customer",
-                success: (res) => {
-                    closeModal(res.data);
-                    return "Customer added successfully"
+        if (!existingData) {
+            toast.promise(
+                createCustomer(data),
+                {
+                    loading: "Adding new customer",
+                    success: (res) => {
+                        closeModal(res.data);
+                        return "Customer added successfully"
+                    },
+                    error: "Failed to add customer",
                 },
-                error: "Failed to add customer",
-            },
-            {
-                id: 'customer-add',
-                position: 'top-center'
-            }
-        );
+                {
+                    id: 'customer-add',
+                    position: 'top-center'
+                }
+            );
+        } else {
+            toast.promise(
+                updateCustomer(existingData._id, data),
+                {
+                    loading: "Updating customer",
+                    success: (res) => {
+                        closeModal(res);
+                        return "Customer updated successfully"
+                    },
+                    error: "Failed to update customer",
+                },
+                {
+                    id: 'customer-update',
+                    position: 'top-center'
+                }
+            );
+        }
     };
 
     return (
@@ -83,7 +112,7 @@ const CustomerForm = ({ closeModal }) => {
             </Form.Group>
 
             <Button type="submit" variant="primary" className="w-100">
-                Save
+                {existingData ? "Update" : "Create"}
             </Button>
         </Form>
     );
