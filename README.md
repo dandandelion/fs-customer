@@ -29,15 +29,27 @@ composer install
 
 ### 3. Set Up Environment Variables
 Copy `.env.example` to `.env` and update the database credentials:
+#### Mac/Linux Systems
 ```bash
 cp .env.example .env
 ```
+#### Windows Systems
+```bash
+copy .env.example .env
+```
 
 ### 4. Create Cache Folders
+#### Mac/Linux Systems
 ```bash
 mkdir -p storage/framework/sessions && mkdir -p storage/framework/views && mkdir -p storage/framework/cache
 ```
+#### Windows Systems
+```bash
+mkdir storage\framework\sessions
+mkdir storage\framework\views
+mkdir storage\framework\cache
 
+```
 ### 5. Navigate & Build then Start Docker
 ```bash'
 cd ..
