@@ -66,6 +66,15 @@ Optionally seed database
 ```bash
 docker exec -it customer_api php artisan db:seed
 ```
+#### Alternatively, use bash inside of the docker service
+```bash
+docker exec -t customer_api bash
+```
+#### Then inside `BASH CLI`
+```bash
+php artisan migrate
+php artisan db:seed # Optionally sseed databases/tables
+```
 
 ### 7. That's all!
 Just make sure docker is running and navigate to the front-end with `http://localhost:5173`.
