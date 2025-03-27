@@ -50,7 +50,7 @@ mkdir storage\framework\views
 mkdir storage\framework\cache
 
 ```
-### 5. Navigate & Build then Start Docker
+### 5. Navigate to Root & Build then Start Docker
 ```bash'
 cd ..
 ```
